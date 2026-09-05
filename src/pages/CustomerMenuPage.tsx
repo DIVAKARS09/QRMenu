@@ -421,6 +421,33 @@ export function CustomerMenuPage() {
             ))}
           </div>
         )}
+
+        {/* Customer Menu Footer */}
+        <div className="mt-12 mb-8 pt-8 border-t border-slate-200 text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>GOOD FOOD | GOOD LIFE</span>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-lg font-bold text-slate-800 tracking-tight">Thank You! Visit Again</p>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              Freshly prepared with love & quality ingredients at {shop.name}.
+            </p>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-slate-600">
+            <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Follow Us:</span>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-slate-200 text-orange-600 font-semibold hover:border-orange-300 hover:bg-orange-50/50 transition-colors shadow-2xs"
+            >
+              <span>@eat.andfly.food</span>
+            </a>
+          </div>
+        </div>
       </main>
 
       {/* Floating Sticky Bottom Cart Action Bar */}

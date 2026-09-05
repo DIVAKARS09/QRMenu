@@ -51,6 +51,18 @@ export function Navbar() {
           {/* Center Navigation Links */}
           <nav className="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
             <Link
+              to="/menu/eat-and-fly"
+              className={`px-4 py-2 rounded-xl transition-colors flex items-center gap-2 ${
+                location.pathname === '/menu/eat-and-fly'
+                  ? 'bg-orange-50 text-orange-600 font-semibold'
+                  : 'hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <Store className="w-4 h-4 text-orange-500" />
+              Eat & Fly Menu
+            </Link>
+
+            <Link
               to="/menu/annapoorna-food-truck"
               className={`px-4 py-2 rounded-xl transition-colors flex items-center gap-2 ${
                 location.pathname === '/menu/annapoorna-food-truck'
@@ -60,18 +72,6 @@ export function Navbar() {
             >
               <Store className="w-4 h-4 text-orange-500" />
               Annapoorna Menu
-            </Link>
-
-            <Link
-              to="/menu/street-bites-food-truck"
-              className={`px-4 py-2 rounded-xl transition-colors flex items-center gap-2 ${
-                location.pathname === '/menu/street-bites-food-truck'
-                  ? 'bg-orange-50 text-orange-600 font-semibold'
-                  : 'hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <Store className="w-4 h-4 text-orange-500" />
-              Street Bites Menu
             </Link>
           </nav>
 

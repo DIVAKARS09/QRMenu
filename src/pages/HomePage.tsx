@@ -23,7 +23,7 @@ import { useAuth } from '../context/AuthContext';
 
 export function HomePage() {
   const [shops, setShops] = useState<Shop[]>([]);
-  const [activeShopSlug, setActiveShopSlug] = useState('annapoorna-food-truck');
+  const [activeShopSlug, setActiveShopSlug] = useState('eat-and-fly');
   const [demoQRUrl, setDemoQRUrl] = useState<string>('');
   const { login } = useAuth();
   const navigate = useNavigate();

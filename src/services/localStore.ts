@@ -1,7 +1,7 @@
 import { User, Shop, Category, FoodItem, Order, OrderStatus, PublicShopData, AuthResponse } from '../types';
 import { defaultShops, defaultCategories, defaultFoods, defaultUsers } from './mockData';
 
-const LOCAL_STORAGE_PREFIX = 'scanmenu_db_';
+const LOCAL_STORAGE_PREFIX = 'scanmenu_eatandfly_v4_';
 
 function getLocalData<T>(key: string, defaultValue: T): T {
   try {
