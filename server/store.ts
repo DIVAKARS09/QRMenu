@@ -51,7 +51,10 @@ class StoreService {
     try {
       if (fs.existsSync(DB_FILE)) {
         const fileContent = fs.readFileSync(DB_FILE, 'utf-8');
-        return JSON.parse(fileContent);
+        const parsed = JSON.parse(fileContent);
+        if (parsed && Array.isArray(parsed.shops) && parsed.shops.length > 0) {
+          return parsed;
+        }
       }
     } catch (err) {
       console.error('Error reading database file, initializing with seed data', err);

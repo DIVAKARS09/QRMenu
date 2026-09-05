@@ -1,5 +1,6 @@
 import { User, Shop, Category, FoodItem, Order, OrderStatus, PublicShopData, AuthResponse } from '../types';
 import { localDb } from './localStore';
+import { defaultShops } from './mockData';
 import QRCode from 'qrcode';
 
 const API_BASE = '/api';
@@ -166,11 +167,15 @@ export const api = {
   async getAllShops(): Promise<Shop[]> {
     try {
       const res = await fetch(`${API_BASE}/shops`);
-      if (res.ok) return res.json();
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
     } catch {
       // fallback
     }
-    return localDb.getShops();
+    const local = localDb.getShops();
+    return Array.isArray(local) && local.length > 0 ? local : defaultShops;
   },
 
   async updateShop(id: string, updates: Partial<Shop>): Promise<Shop> {

@@ -1,7 +1,7 @@
 import { User, Shop, Category, FoodItem, Order, OrderStatus, PublicShopData, AuthResponse } from '../types';
 import { defaultShops, defaultCategories, defaultFoods, defaultUsers } from './mockData';
 
-const LOCAL_STORAGE_PREFIX = 'scanmenu_eatandfly_v4_';
+const LOCAL_STORAGE_PREFIX = 'scanmenu_eatandfly_v5_';
 
 function getLocalData<T>(key: string, defaultValue: T): T {
   try {
@@ -10,7 +10,12 @@ function getLocalData<T>(key: string, defaultValue: T): T {
       localStorage.setItem(LOCAL_STORAGE_PREFIX + key, JSON.stringify(defaultValue));
       return defaultValue;
     }
-    return JSON.parse(item);
+    const parsed = JSON.parse(item);
+    if (Array.isArray(defaultValue) && (!Array.isArray(parsed) || parsed.length === 0)) {
+      localStorage.setItem(LOCAL_STORAGE_PREFIX + key, JSON.stringify(defaultValue));
+      return defaultValue;
+    }
+    return parsed;
   } catch {
     return defaultValue;
   }
@@ -26,22 +31,37 @@ function setLocalData<T>(key: string, value: T): void {
 
 export const localDb = {
   getShops(): Shop[] {
-    return getLocalData<Shop[]>('shops', defaultShops);
+    const data = getLocalData<Shop[]>('shops', defaultShops);
+    if (!Array.isArray(data) || data.length === 0) {
+      setLocalData('shops', defaultShops);
+      return defaultShops;
+    }
+    return data;
   },
   saveShops(shops: Shop[]) {
-    setLocalData('shops', shops);
+    setLocalData('shops', Array.isArray(shops) && shops.length > 0 ? shops : defaultShops);
   },
   getCategories(): Category[] {
-    return getLocalData<Category[]>('categories', defaultCategories);
+    const data = getLocalData<Category[]>('categories', defaultCategories);
+    if (!Array.isArray(data) || data.length === 0) {
+      setLocalData('categories', defaultCategories);
+      return defaultCategories;
+    }
+    return data;
   },
   saveCategories(cats: Category[]) {
-    setLocalData('categories', cats);
+    setLocalData('categories', Array.isArray(cats) && cats.length > 0 ? cats : defaultCategories);
   },
   getFoods(): FoodItem[] {
-    return getLocalData<FoodItem[]>('foods', defaultFoods);
+    const data = getLocalData<FoodItem[]>('foods', defaultFoods);
+    if (!Array.isArray(data) || data.length === 0) {
+      setLocalData('foods', defaultFoods);
+      return defaultFoods;
+    }
+    return data;
   },
   saveFoods(foods: FoodItem[]) {
-    setLocalData('foods', foods);
+    setLocalData('foods', Array.isArray(foods) && foods.length > 0 ? foods : defaultFoods);
   },
   getOrders(): Order[] {
     return getLocalData<Order[]>('orders', []);

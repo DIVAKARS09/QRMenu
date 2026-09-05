@@ -19,11 +19,16 @@ import {
 import QRCode from 'qrcode';
 import { Shop } from '../types';
 import { api } from '../services/api';
+import { localDb } from '../services/localStore';
+import { defaultShops } from '../services/mockData';
 import { useAuth } from '../context/AuthContext';
 
 export function HomePage() {
-  const [shops, setShops] = useState<Shop[]>([]);
-  const [activeShopSlug, setActiveShopSlug] = useState('eat-and-fly');
+  const [shops, setShops] = useState<Shop[]>(() => {
+    const local = localDb.getShops();
+    return Array.isArray(local) && local.length > 0 ? local : defaultShops;
+  });
+  const [activeShopSlug, setActiveShopSlug] = useState<string>('eat-and-fly');
   const [demoQRUrl, setDemoQRUrl] = useState<string>('');
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -31,12 +36,15 @@ export function HomePage() {
   useEffect(() => {
     api.getAllShops()
       .then((data) => {
-        setShops(data);
-        if (data.length > 0) {
-          setActiveShopSlug(data[0].slug);
+        if (Array.isArray(data) && data.length > 0) {
+          setShops(data);
+          setActiveShopSlug((prev) => (data.some((s) => s.slug === prev) ? prev : data[0].slug));
         }
       })
-      .catch((err) => console.error('Failed to load shops', err));
+      .catch((err) => {
+        console.error('Failed to load shops', err);
+        setShops(defaultShops);
+      });
   }, []);
 
   const menuUrl = `${window.location.origin}/menu/${activeShopSlug}`;
@@ -141,16 +149,17 @@ export function HomePage() {
 
                 {/* Shop Selector Dropdown inside simulation */}
                 <div className="mt-4">
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">
+                  <label htmlFor="shop-demo-selector" className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
                     Select Shop to Demo:
                   </label>
                   <select
+                    id="shop-demo-selector"
                     value={activeShopSlug}
                     onChange={(e) => setActiveShopSlug(e.target.value)}
-                    className="w-full text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
+                    className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-300 hover:border-orange-400 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-hidden cursor-pointer shadow-xs transition-colors"
                   >
-                    {shops.map((s) => (
-                      <option key={s._id} value={s.slug}>
+                    {(shops && shops.length > 0 ? shops : defaultShops).map((s) => (
+                      <option key={s._id} value={s.slug} className="text-slate-900 py-1">
                         {s.name} ({s.location})
                       </option>
                     ))}
@@ -268,7 +277,7 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {shops.map((shop) => (
+            {(shops && shops.length > 0 ? shops : defaultShops).map((shop) => (
               <div
                 key={shop._id}
                 className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row"
